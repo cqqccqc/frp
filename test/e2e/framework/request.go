@@ -1,33 +1,33 @@
 package framework
 
 import (
+	"net/http"
+
 	"github.com/fatedier/frp/test/e2e/framework/consts"
 	"github.com/fatedier/frp/test/e2e/pkg/request"
 )
 
-func SetRequestProtocol(protocol string) func(*request.Request) {
-	return func(r *request.Request) {
-		r.Protocol(protocol)
+func SpecifiedHTTPBodyHandler(body []byte) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		w.Write(body)
 	}
 }
 
-func SetRequestPort(port int) func(*request.Request) {
-	return func(r *request.Request) {
-		r.Port(port)
-	}
-}
-
-// NewRequest return a default TCP request with default timeout and content.
+// NewRequest return a default request with default timeout and content.
 func NewRequest() *request.Request {
 	return request.New().
 		Timeout(consts.DefaultTimeout).
 		Body([]byte(consts.TestString))
 }
 
+func NewHTTPRequest() *request.Request {
+	return request.New().HTTP().HTTPParams("GET", "", "/", nil)
+}
+
 func ExpectResponse(req *request.Request, expectResp []byte, explain ...interface{}) {
 	ret, err := req.Do()
 	ExpectNoError(err, explain...)
-	ExpectEqualValues(expectResp, ret, explain...)
+	ExpectEqualValues(expectResp, ret.Content, explain...)
 }
 
 func ExpectResponseError(req *request.Request, explain ...interface{}) {
@@ -59,9 +59,21 @@ func (e *RequestExpect) RequestModify(f func(r *request.Request)) *RequestExpect
 	return e
 }
 
+func (e *RequestExpect) Protocol(protocol string) *RequestExpect {
+	e.req.Protocol(protocol)
+	return e
+}
+
 func (e *RequestExpect) PortName(name string) *RequestExpect {
 	if e.f != nil {
 		e.req.Port(e.f.PortByName(name))
+	}
+	return e
+}
+
+func (e *RequestExpect) Port(port int) *RequestExpect {
+	if e.f != nil {
+		e.req.Port(port)
 	}
 	return e
 }
@@ -81,10 +93,22 @@ func (e *RequestExpect) Explain(explain ...interface{}) *RequestExpect {
 	return e
 }
 
-func (e *RequestExpect) Ensure() {
+type EnsureFunc func(*request.Response) bool
+
+func (e *RequestExpect) Ensure(fns ...EnsureFunc) {
+	ret, err := e.req.Do()
 	if e.expectError {
-		ExpectResponseError(e.req, e.explain...)
+		ExpectError(err, e.explain...)
+		return
+	}
+	ExpectNoError(err, e.explain...)
+
+	if len(fns) == 0 {
+		ExpectEqualValues(e.expectResp, ret.Content, e.explain...)
 	} else {
-		ExpectResponse(e.req, e.expectResp, e.explain...)
+		for _, fn := range fns {
+			ok := fn(ret)
+			ExpectTrue(ok, e.explain...)
+		}
 	}
 }

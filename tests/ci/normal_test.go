@@ -2,7 +2,6 @@ package ci
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"os"
 	"testing"
@@ -66,61 +65,6 @@ func TestHTTP(t *testing.T) {
 	if assert.NoError(err) {
 		assert.Equal(200, code)
 		assert.Equal(consts.TEST_HTTP_NORMAL_STR, body)
-	}
-
-	// web02
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "test2.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(200, code)
-		assert.Equal(consts.TEST_HTTP_NORMAL_STR, body)
-	}
-
-	// error host header
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "errorhost.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(404, code)
-	}
-
-	// web03
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "test3.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(200, code)
-		assert.Equal(consts.TEST_HTTP_NORMAL_STR, body)
-	}
-
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d/foo", consts.TEST_HTTP_FRP_PORT), "test3.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(200, code)
-		assert.Equal(consts.TEST_HTTP_FOO_STR, body)
-	}
-
-	// web04
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d/bar", consts.TEST_HTTP_FRP_PORT), "test3.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(200, code)
-		assert.Equal(consts.TEST_HTTP_BAR_STR, body)
-	}
-
-	// web05
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "test5.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(401, code)
-	}
-
-	headers := make(map[string]string)
-	headers["Authorization"] = util.BasicAuth("test", "test")
-	code, body, _, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "test5.frp.com", headers, "")
-	if assert.NoError(err) {
-		assert.Equal(401, code)
-	}
-
-	// web06
-	var header http.Header
-	code, body, header, err = util.SendHTTPMsg("GET", fmt.Sprintf("http://127.0.0.1:%d", consts.TEST_HTTP_FRP_PORT), "test6.frp.com", nil, "")
-	if assert.NoError(err) {
-		assert.Equal(200, code)
-		assert.Equal(consts.TEST_HTTP_NORMAL_STR, body)
-		assert.Equal("true", header.Get("X-Header-Set"))
 	}
 
 	// wildcard_http

@@ -8,6 +8,7 @@ require (
 	github.com/fatedier/beego v0.0.0-20171024143340-6c6a4f5bd5eb
 	github.com/fatedier/golib v0.1.1-0.20200901083111-1f870741e185
 	github.com/fatedier/kcp-go v2.0.4-0.20190803094908-fe8645b0a904+incompatible
+	github.com/go-playground/validator/v10 v10.6.1
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.0
@@ -15,6 +16,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/klauspost/cpuid v1.2.0 // indirect
 	github.com/klauspost/reedsolomon v1.9.1 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/onsi/ginkgo v1.12.3
 	github.com/onsi/gomega v1.10.1
@@ -25,7 +27,7 @@ require (
 	github.com/rodaine/table v1.0.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/cobra v0.0.3
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.6.1
 	github.com/templexxx/cpufeat v0.0.0-20170927014610-3794dfbfb047 // indirect
 	github.com/templexxx/xor v0.0.0-20170926022130-0af8e873c554 // indirect
 	github.com/tjfoc/gmsm v0.0.0-20171124023159-98aa888b79d8 // indirect

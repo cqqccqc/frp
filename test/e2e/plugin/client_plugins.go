@@ -65,11 +65,7 @@ var _ = Describe("[Feature: Client-Plugins]", func() {
 			f.RunProcesses([]string{serverConf}, []string{clientConf})
 
 			for _, test := range tests {
-				framework.ExpectResponse(
-					framework.NewRequest().Port(f.PortByName(test.portName)),
-					[]byte(consts.TestString),
-					test.proxyName,
-				)
+				framework.NewRequestExpect(f).Port(f.PortByName(test.portName)).Ensure()
 			}
 		})
 	})

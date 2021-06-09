@@ -40,6 +40,9 @@ ci:
 e2e:
 	./hack/run-e2e.sh
 
+e2e-trace:
+	DEBUG=true LOG_LEVEL=trace ./hack/run-e2e.sh
+
 alltest: gotest ci e2e
 	
 clean:
